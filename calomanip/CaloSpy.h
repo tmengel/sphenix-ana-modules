@@ -36,6 +36,7 @@ class CaloSpy : public SubsysReco
    bool m_do_norm {false};
    std::vector< TH2 *> m_h2d_tower_e_eta_phi {};
    std::vector< TH2 *> m_h2d_tower_e_eta_phi_dead {};
+   std::vector< TH1 *> m_h1d_tower_e {};
    int m_nevents {0};
 };
 

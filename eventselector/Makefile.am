@@ -18,7 +18,9 @@ pkginclude_HEADERS = \
   LeadJetCut.h \
   LeadJetHook.h \
   MinBiasCut.h \
+  MissingSebFilter.h \
   TowerChi2Cut.h \
+  TriggerSelect.h \
   ZVertexCut.h
 
 lib_LTLIBRARIES = \
@@ -31,7 +33,9 @@ libeventselection_la_SOURCES = \
   LeadJetCut.cc \
   LeadJetHook.cc \
   MinBiasCut.cc \
+  MissingSebFilter.cc \
   TowerChi2Cut.cc \
+  TriggerSelect.cc \
   ZVertexCut.cc
 
 libeventselection_la_LIBADD = \
@@ -41,6 +45,7 @@ libeventselection_la_LIBADD = \
   -lglobalvertex_io \
   -lglobalvertex \
   -lcentrality_io \
+  -lffarawobjects \
   -lSubsysReco
 
 BUILT_SOURCES = testexternals.cc

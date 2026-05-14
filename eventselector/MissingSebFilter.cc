@@ -30,7 +30,7 @@ bool MissingSebFilter::operator()(PHCompositeNode *topNode)
 
     for (const auto &node_name : GetNodeNames())
     {
-        auto * towers = findNode::getClass<TowerInfoContainer>(topNode, node_name);
+        auto towers = findNode::getClass<TowerInfoContainer>(topNode, node_name);
         if (!towers) {
             std::cerr << Name() + "::operator(PHCompositeNode *topNode) Could not find " << node_name << " node" << std::endl;
             exit(-1); // this is a fatal error
@@ -40,13 +40,62 @@ bool MissingSebFilter::operator()(PHCompositeNode *topNode)
         unsigned int nChannels = towers->size();
         unsigned int nDead = 0;
         for(unsigned int channel = 0; channel < nChannels; channel++){
-            auto * tower = towers->get_tower_at_channel(channel);
-            float energy = tower->get_energy();
-            if ( tower->get_isHot() || tower->get_isNoCalib() || tower->get_isNotInstr() || tower->get_isBadChi2() || std::isnan(energy) ) {
+           
+            auto tower = towers->get_tower_at_channel(channel);
+            int status = tower->get_status();
+
+            if (tower->get_isHot() )
+            {
                 nDead++;
+                if ( Verbosity() ) {
+                    std::cout << Name() + "::operator(PHCompositeNode *topNode) Checking channel " << channel  << " with status " << status << std::endl;
+                }
+                continue;
+            }
+            if ( tower->get_isNoCalib() )
+            {
+                nDead++;
+                if ( Verbosity() ) {
+                    std::cout << Name() + "::operator(PHCompositeNode *topNode) Checking channel " << channel  << " with status " << status << std::endl;
+                }
+                continue;
+            }
+            if ( tower->get_isNotInstr() )
+            {
+                nDead++;
+                if ( Verbosity() ) {
+                    std::cout << Name() + "::operator(PHCompositeNode *topNode) Checking channel " << channel  << " with status " << status << std::endl;
+                }
+                continue;
+            }
+            if ( tower->get_isBadChi2() )
+            {
+                nDead++;
+                if ( Verbosity() ) {
+                    std::cout << Name() + "::operator(PHCompositeNode *topNode) Checking channel " << channel  << " with status " << status << std::endl;
+                }
+                continue;
+            }
+            if (std::isnan(tower->get_energy())) {
+                nDead++;
+                if ( Verbosity() ) {
+                    std::cout << Name() + "::operator(PHCompositeNode *topNode) Checking channel " << channel  << " with status " << status << std::endl;
+                }
+                continue;
             }
         }
-        Passed(nDead < (nChannels/16)); // if more than 1/16th of the channels are dead, we fail the cut
+        
+        float frac_dead = static_cast<float>(nDead) / static_cast<float>(nChannels);
+        float threshold = m_threshold;
+        bool accepted = (frac_dead < threshold);
+        if(Verbosity()){
+            std::cout << Name() + "::operator(PHCompositeNode *topNode) Node " << node_name << ": " 
+                      << nDead << " dead channels out of " << nChannels 
+                      << " (" << frac_dead*100.0 << "%), threshold is " << threshold*100.0 << "% --> "
+                      << (accepted ? "ACCEPTED" : "REJECTED") << std::endl;
+        }
+
+        Passed(accepted);
         if (!Passed()){
             if(Verbosity()){
                 std::cout << Name() + "::operator(PHCompositeNode *topNode) Node " << node_name << " failed, " 

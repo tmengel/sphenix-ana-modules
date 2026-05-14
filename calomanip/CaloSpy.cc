@@ -57,6 +57,12 @@ int CaloSpy::Init(PHCompositeNode * /*topNode*/)
       h2dead->GetZaxis()->SetTitle("Energy [GeV]");
       m_h2d_tower_e_eta_phi_dead.push_back(h2dead);
 
+      TH1F *h1d = new TH1F(Form("h1d_%s", m_caloNodes[i].c_str()), Form("%s;Energy [GeV];Counts", m_caloNodes[i].c_str()),
+          150, -5.0, 10.0);
+      h1d->GetXaxis()->SetTitle("Energy [GeV]");
+      h1d->GetYaxis()->SetTitle("Counts");
+      m_h1d_tower_e.push_back(h1d);
+
     }
 
     if (Verbosity() > 0) {
@@ -94,6 +100,7 @@ int CaloSpy::process_event(PHCompositeNode *topNode)
           m_h2d_tower_e_eta_phi_dead[i]->Fill(ieta, iphi);
         } else {
           m_h2d_tower_e_eta_phi[i]->Fill(ieta, iphi, energy);
+          m_h1d_tower_e[i]->Fill(energy);
         }
     }
   }
@@ -115,9 +122,13 @@ int CaloSpy::End(PHCompositeNode */*topNode*/)
     for (unsigned int i = 0; i < m_caloNodes.size(); i++) {
       m_h2d_tower_e_eta_phi[i]->Scale(norm);
       m_h2d_tower_e_eta_phi_dead[i]->Scale(norm);
-    }
+    
+      m_h1d_tower_e[i]->Scale(norm);
+  }
+    
   }
   for (unsigned int i = 0; i < m_caloNodes.size(); i++){
+    m_h1d_tower_e[i]->Write();
     m_h2d_tower_e_eta_phi[i]->Write();
     m_h2d_tower_e_eta_phi_dead[i]->Write();
   }

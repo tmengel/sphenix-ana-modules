@@ -11,37 +11,27 @@ AM_LDFLAGS = \
   -L$(OFFLINE_MAIN)/lib64
 
 pkginclude_HEADERS = \
-  CaloSpy.h \
-  CaloTowerManip.h \
-  CaloManip.h
+  cppBash.h \
+  AnaUtils.h \
+  PlotUtils.h \
+  sphenix_style.h
 
 lib_LTLIBRARIES = \
-   libcalomanip.la
+   libmyana.la
 
-libcalomanip_la_LDFLAGS = \
+libmyana_la_LDFLAGS = \
   -L$(libdir) \
-  -L$(OFFLINE_MAIN)/lib \
-  `fastjet-config --libs`
+  -L$(OFFLINE_MAIN)/lib 
 
-libcalomanip_la_SOURCES = \
-  CaloSpy.cc \
-  CaloTowerManip.cc \
-  CaloManip.cc
+libmyana_la_SOURCES = \
+  cppBash.cc \
+  AnaUtils.cc \
+  PlotUtils.cc \
+  sphenix_style.cc
   
-libcalomanip_la_LIBADD = \
-  -lcalo_io \
-  -lcalotrigger_io \
-  -lcentrality_io \
-  -ljetbase \
-  -ljetbackground_io \
-  -ljetbackground \
+libmyana_la_LIBADD = \
   -lfun4all \
-  -lglobalvertex_io \
-  -lglobalvertex \
-  -lphhepmc_io \
-  -lphool \
-  -lSubsysReco
-
+  -lSubsysReco 
 
 BUILT_SOURCES = testexternals.cc
 
@@ -49,7 +39,7 @@ noinst_PROGRAMS = \
   testexternals 
 
 testexternals_SOURCES = testexternals.cc
-testexternals_LDADD   = libcalomanip.la
+testexternals_LDADD   = libmyana.la
 
 testexternals.cc:
 	echo "//*** this is a generated file. Do not commit, do not edit" > $@

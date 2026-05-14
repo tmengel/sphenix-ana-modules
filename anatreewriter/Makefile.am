@@ -11,7 +11,8 @@ AM_LDFLAGS = \
   -L$(OFFLINE_MAIN)/lib64
 
 pkginclude_HEADERS = \
-  AnaTreeWriter.h
+  TreeWriter.h \
+  SimTree.h
 
 lib_LTLIBRARIES = \
    libanatreewriter.la
@@ -22,7 +23,8 @@ libanatreewriter_la_LDFLAGS = \
   `fastjet-config --libs`
 
 libanatreewriter_la_SOURCES = \
-  AnaTreeWriter.cc
+  TreeWriter.cc \
+  SimTree.cc
   
 libanatreewriter_la_LIBADD = \
   -lcalo_io \
@@ -37,6 +39,7 @@ libanatreewriter_la_LIBADD = \
   -ljetbackground \
   -lphhepmc_io \
   -lphool \
+  -lepd_io \
   -lSubsysReco
 
 

@@ -22,6 +22,9 @@ class MissingSebFilter  : public EventCut
 
     void identify(std::ostream &os = std::cout) const override;
     bool operator()(PHCompositeNode* topNode) override;
+    void setThreshold(float threshold) { m_threshold = threshold; }
+  private:
+    float m_threshold = 1.0/16.0;
 
 };
 
